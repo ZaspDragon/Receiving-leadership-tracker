@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Receiving Manager Dashboard</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <h1>Receiving Manager Dashboard</h1>
+      <p>Track the floor, coach the team, and export clean reports.</p>
+    </div>
+    <div class="badge">Blue / White Suite</div>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="overview">Overview</button>
+    <button class="tab" data-tab="entry">Daily Entry</button>
+    <button class="tab" data-tab="team">Team Notes</button>
+    <button class="tab" data-tab="history">History</button>
+    <button class="tab" data-tab="report">Daily Report</button>
+  </nav>
+
+  <main class="wrap">
+    <section id="overview" class="panel active">
+      <div class="grid cards-4">
+        <article class="card metric">
+          <span>Trucks Completion</span>
+          <strong id="truckCompletion">0%</strong>
+          <small>Received vs scheduled</small>
+        </article>
+        <article class="card metric">
+          <span>Pallets / Hour</span>
+          <strong id="palletsPerHour">0.00</strong>
+          <small>Whole team output</small>
+        </article>
+        <article class="card metric">
+          <span>Error Rate</span>
+          <strong id="errorRate">0.00%</strong>
+          <small>Errors per pallet</small>
+        </article>
+        <article class="card metric">
+          <span>Dock-to-Stock Avg</span>
+          <strong id="dockToStock">0 min</strong>
+          <small>Average cycle time</small>
+        </article>
+      </div>
+
+      <div class="grid cards-2">
+        <article class="card">
+          <h2>Today at a Glance</h2>
+          <div class="summary-list" id="todaySummary"></div>
+        </article>
+        <article class="card">
+          <h2>Targets</h2>
+          <div class="summary-list">
+            <div><span>Truck completion target</span><strong>100%</strong></div>
+            <div><span>Pallet pace target</span><strong>45 pallets / 8 hr per lead team</strong></div>
+            <div><span>Error pressure</span><strong>Keep under 2%</strong></div>
+            <div><span>Backlog target</span><strong>0 unfinished trucks</strong></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="entry" class="panel">
+      <form id="entryForm" class="card form-card">
+        <h2>Daily Entry</h2>
+        <div class="grid cards-2">
+          <label>
+            Date
+            <input type="date" id="date" required />
+          </label>
+          <label>
+            Shift
+            <select id="shift">
+              <option>Day</option>
+              <option>Mid</option>
+              <option>Night</option>
+            </select>
+          </label>
+          <label>
+            Trucks Scheduled
+            <input type="number" id="trucksScheduled" min="0" value="0" required />
+          </label>
+          <label>
+            Trucks Received
+            <input type="number" id="trucksReceived" min="0" value="0" required />
+          </label>
+          <label>
+            Total Pallets
+            <input type="number" id="pallets" min="0" value="0" required />
+          </label>
+          <label>
+            Total Team Hours
+            <input type="number" id="hours" min="0" step="0.25" value="8" required />
+          </label>
+          <label>
+            Total Errors
+            <input type="number" id="errors" min="0" value="0" required />
+          </label>
+          <label>
+            Avg Dock-to-Stock (minutes)
+            <input type="number" id="dockMinutes" min="0" value="0" required />
+          </label>
+          <label>
+            Backlog Pallets
+            <input type="number" id="backlog" min="0" value="0" required />
+          </label>
+          <label>
+            Temps Used
+            <input type="number" id="temps" min="0" value="0" required />
+          </label>
+          <label>
+            Admin 1
+            <input type="text" id="admin1" placeholder="Name" />
+          </label>
+          <label>
+            Admin 2
+            <input type="text" id="admin2" placeholder="Name" />
+          </label>
+          <label>
+            Lead 1
+            <input type="text" id="lead1" placeholder="Name" />
+          </label>
+          <label>
+            Lead 2
+            <input type="text" id="lead2" placeholder="Name" />
+          </label>
+        </div>
+
+        <label>
+          Biggest Issue Today
+          <textarea id="issue" rows="3" placeholder="Vendor issue, staffing gap, late truck, damage, etc."></textarea>
+        </label>
+
+        <label>
+          Action for Tomorrow
+          <textarea id="action" rows="3" placeholder="What changes tomorrow?"></textarea>
+        </label>
+
+        <div class="actions">
+          <button type="submit" class="primary">Save Entry</button>
+          <button type="button" id="clearForm">Clear Form</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="team" class="panel">
+      <div class="grid cards-2">
+        <article class="card">
+          <h2>Role Ownership</h2>
+          <div class="summary-list">
+            <div><span>Admin 1</span><strong>PO / paperwork control</strong></div>
+            <div><span>Admin 2</span><strong>System entry / discrepancy log</strong></div>
+            <div><span>Lead 1</span><strong>Dock flow / pace</strong></div>
+            <div><span>Lead 2</span><strong>Accuracy / verification</strong></div>
+          </div>
+        </article>
+        <article class="card">
+          <h2>Coaching Notes</h2>
+          <label>
+            Team note
+            <textarea id="teamNote" rows="6" placeholder="Coaching wins, process gaps, temp performance, vendor issues..."></textarea>
+          </label>
+          <div class="actions">
+            <button type="button" class="primary" id="saveTeamNote">Save Note</button>
+          </div>
+          <div id="teamNotesList" class="stack"></div>
+        </article>
+      </div>
+    </section>
+
+    <section id="history" class="panel">
+      <article class="card">
+        <div class="toolbar">
+          <h2>Saved Entries</h2>
+          <div class="actions slim">
+            <button type="button" id="exportCsv">Export CSV</button>
+            <button type="button" id="exportJson">Export JSON</button>
+            <label class="import-btn">
+              Import JSON
+              <input type="file" id="importJson" accept="application/json" hidden />
+            </label>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Shift</th>
+                <th>Trucks</th>
+                <th>Pallets</th>
+                <th>Pallets/Hr</th>
+                <th>Errors</th>
+                <th>Error %</th>
+                <th>Backlog</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="historyTable"></tbody>
+          </table>
+        </div>
+      </article>
+    </section>
+
+    <section id="report" class="panel">
+      <article class="card print-card" id="printArea">
+        <h2>Receiving Manager Daily Report</h2>
+        <div id="reportContent"></div>
+      </article>
+      <div class="actions">
+        <button type="button" class="primary" id="printReport">Print / Save PDF</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
